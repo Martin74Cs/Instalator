@@ -43,6 +43,16 @@ namespace Library
         public static void Ukončení()
         {
             //Hlavní program se podívá přes HttpClient a zjistí novou verzi programu.
+
+            //Bude spuštěn instalátor
+
+            //Hlavní program bude ukončen
+
+            //Proběhne kopírování souboru
+
+            //Hlavní program spušten
+
+            //Instalátor ukončen
         }
     }
 }
