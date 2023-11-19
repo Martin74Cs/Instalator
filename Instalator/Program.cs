@@ -2,6 +2,8 @@
 using Instalator;
 using Library;
 
+Console.WriteLine(Environment.MachineName.ToUpperInvariant());
+
 //Příprava instalce
 Console.Write("Příprava instalce .....");
 //Příprava souboru kopirování do složky Install
@@ -15,11 +17,13 @@ Console.WriteLine("Ok");
 Console.Write("Poslat soubor na WEB .....");
 string SoubourCode = await Install.Upload(Cesty.ZIP);
 Console.WriteLine("Ok");
-Console.ReadKey();
+//Console.ReadKey();
 
 Console.Write("Stažení souboru z WEB .....");
-Install.Download(SoubourCode,Cesty.UnZip);
+await Install.Download(SoubourCode,Cesty.UnZip);
 Console.WriteLine("Ok");
+
+Console.WriteLine("Stiskni klavesu .......");
 Console.ReadKey();
 
 ////Manifest.Vypis();

@@ -11,8 +11,10 @@ namespace WinForms
 
         private async void Button1_Click(object sender, EventArgs e)
         {
-
-           await Install.Load(@"http://192.168.1.210/api/file/jvnvb2gr.wmh");
+           var zip = await Install.GetSearchAsync("zip.zip");
+           string RandomFilename = zip.Last().StoredFileName??"";
+           string Cesta = @"c:\Users\Martin\OneDriveKopie\Instalator\Instalator\Instalator\bin\Debug\net8.0\ZIP\"; 
+           await Install.Download(RandomFilename, Cesta);
         }
     }
 }
