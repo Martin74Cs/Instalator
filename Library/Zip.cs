@@ -13,13 +13,14 @@ namespace Library
         /// ZIPOVÁNNÍ ZADANÉ SLOŽKY
         /// </summary>
         /// <param name="DirZip"></param>
-        public static void Start(string DirZip)
+        public static void Start(string DirZip, string zipSoubor = "")
         {
             // Zkontrolujte, zda zadaná složka existuje
             if (Directory.Exists(DirZip))
             {
                 // Nastavte název výsledného zip souboru
-                string zipSoubor = @"c:\Z\ZipSouboru.zip";
+                if(string.IsNullOrEmpty(zipSoubor))
+                    zipSoubor = @"c:\Z\Zip.zip";
 
                 // Zazipujte obsah složky
                 if(File.Exists(zipSoubor))
@@ -70,11 +71,15 @@ namespace Library
 
                     if (Directory.Exists(souborOboji))
                     {
+                        if (!Directory.Exists(cilovySouborNeboSlozka))
+                            Directory.CreateDirectory(cilovySouborNeboSlozka);
                         // Rekurzivní kopírování podsložky
                         KopirovatSlozku(souborOboji, cilovySouborNeboSlozka);
                     }
                     else
                     {
+                        if (File.Exists(cilovySouborNeboSlozka))
+                            File.Delete(cilovySouborNeboSlozka);
                         // Kopírování souboru
                         File.Copy(souborOboji, cilovySouborNeboSlozka);
                     }
