@@ -151,11 +151,13 @@ namespace Library
                 MultipartFormDataContent content = new MultipartFormDataContent();
 
                 //typ spoboru txt
-                streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(MediaTypeNames.Text.Plain);
+                //streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(MediaTypeNames.Text.Plain);
 
                 //fileNames.Add(file.Name);
                 content.Add(content: streamContent, name: "\"files\"", fileName: "Manifest.txt");
 
+                // Zobrazit obsah, který bude odeslán v HTTP požadavku
+                string requestBody = await content.ReadAsStringAsync();
 
                 var http = new HttpApi();
                 var response = await http.PostAsync($"/api/File/Manifest", content);
