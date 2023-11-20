@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             Button1 = new Button();
+            button2 = new Button();
             SuspendLayout();
             // 
             // Button1
@@ -42,11 +43,23 @@
             Button1.UseVisualStyleBackColor = true;
             Button1.Click += Button1_Click;
             // 
+            // button2
+            // 
+            button2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
+            button2.Location = new Point(12, 273);
+            button2.Name = "button2";
+            button2.Size = new Size(102, 32);
+            button2.TabIndex = 1;
+            button2.Text = "Manifest";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(601, 317);
+            Controls.Add(button2);
             Controls.Add(Button1);
             Name = "Form1";
             Text = "Form1";
@@ -56,5 +69,6 @@
         #endregion
 
         private Button Button1;
+        private Button button2;
     }
 }

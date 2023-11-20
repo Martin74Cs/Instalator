@@ -11,10 +11,18 @@ namespace WinForms
 
         private async void Button1_Click(object sender, EventArgs e)
         {
-           var zip = await Install.GetSearchAsync("zip.zip");
-           string RandomFilename = zip.Last().StoredFileName??"";
-           string Cesta = @"c:\Users\Martin\OneDriveKopie\Instalator\Instalator\Instalator\bin\Debug\net8.0\ZIP\"; 
-           await Install.Download(RandomFilename, Cesta);
+            var zip = await Install.GetSearchAsync("zip.zip");
+            string RandomFilename = zip.Last().StoredFileName ?? "";
+            string Cesta = @"c:\Users\Martin\OneDriveKopie\Instalator\Instalator\Instalator\bin\Debug\net8.0\ZIP\";
+            await Install.Download(RandomFilename, Cesta);
         }
+
+        private async void button2_Click(object sender, EventArgs e)
+        {
+            var qwe = await Install.ManifestUploadAsync();
+            var result = await Install.ManifestDownloadAsync();
+        }
+
+
     }
 }
