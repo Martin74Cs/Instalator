@@ -13,13 +13,23 @@ namespace WinForms
         {
             var zip = await Install.GetSearchAsync("zip.zip");
             string RandomFilename = zip.Last().StoredFileName ?? "";
-            string Cesta = @"c:\Users\Martin\OneDriveKopie\Instalator\Instalator\Instalator\bin\Debug\net8.0\ZIP\";
+
+            string Cesta = string.Empty;
+            if (Environment.MachineName.ToUpperInvariant() == "KANCELAR")
+                Cesta = @"c:\Users\Martin\OneDriveKopie\Instalator\Instalator\Instalator\bin\Debug\net8.0\ZIP\";
+            Cesta = @"d:\OneDrive.ZALOHA\Instalator\Instalator\bin\Debug\net8.0\FullInstall";
+            string Kontrola = Path.GetDirectoryName(Cesta);
+            if (!Directory.Exists(Cesta))
+                Directory.CreateDirectory(Cesta);
+
             await Install.Download(RandomFilename, Cesta);
+            
+            Close();
         }
 
         private async void button2_Click(object sender, EventArgs e)
         {
-            var qwe = await Install.ManifestUploadAsync();
+            //var qwe = await Install.ManifestUploadAsync();
             var result = await Install.ManifestDownloadAsync();
         }
 

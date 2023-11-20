@@ -35,7 +35,7 @@
             // Button1
             // 
             Button1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            Button1.Location = new Point(489, 272);
+            Button1.Location = new Point(447, 49);
             Button1.Name = "Button1";
             Button1.Size = new Size(102, 31);
             Button1.TabIndex = 0;
@@ -46,7 +46,7 @@
             // button2
             // 
             button2.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 238);
-            button2.Location = new Point(12, 273);
+            button2.Location = new Point(12, 49);
             button2.Name = "button2";
             button2.Size = new Size(102, 32);
             button2.TabIndex = 1;
@@ -58,7 +58,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(601, 317);
+            ClientSize = new Size(568, 93);
             Controls.Add(button2);
             Controls.Add(Button1);
             Name = "Form1";

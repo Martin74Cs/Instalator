@@ -29,11 +29,28 @@ namespace Instalator
             }
         }
 
+        public static string Manifest
+        {
+            get
+            {
+                //var Cesta = new Cesty();
+                var Cesta = Path.Combine(new Cesty().Start, "Manifest");
+                if (!Directory.Exists(Cesta))
+                    Directory.CreateDirectory(Cesta);
+                return Cesta;
+            }
+        }
+
         public static string Zdroj
         {
             get
             {
-                string Cesta = @"c:\Users\Martin\OneDrive\Databaze\Tezak\XMLTablulka1\WFForm\bin\publish\";
+                string Cesta = string.Empty;
+                if (Environment.MachineName.ToUpperInvariant() == "KANCELAR")
+                    Cesta = @"c:\Users\Martin\OneDrive\Databaze\Tezak\XMLTablulka1\WFForm\bin\publish\";
+                Cesta = @"d:\OneDrive\Databaze\Tezak\XMLTablulka1\WFForm\bin\publish\";
+
+
                 //var cesta = Path.Combine(Cesta, "Zdroj");
                 //if (!Directory.Exists(cesta))
                 //    Directory.CreateDirectory(cesta);

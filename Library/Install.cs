@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Instalator;
+using System;
 using System.Collections.Generic;
+using System.Formats.Asn1;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -7,9 +9,13 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Net.Mime;
 using System.Reflection.Metadata;
+using System.Reflection.PortableExecutable;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+
 
 namespace Library
 {
@@ -48,9 +54,10 @@ namespace Library
         /// Nahraní souboru na WEB
         /// </summary>
         /// <param name="file"></param>
+        /// 
+
         public static async Task<string> Upload(string file)
         {
-
             var fileStream = System.IO.File.OpenRead(file);
             var streamContent = new StreamContent(fileStream);
             MultipartFormDataContent content = new MultipartFormDataContent();
@@ -64,7 +71,7 @@ namespace Library
             var response = await http.PostAsync("/api/File", content);
             //zpětné načtení souboru který byl uložen
             var newUploadResult = await response.Content.ReadFromJsonAsync<List<Upload>>();
-            if (newUploadResult is not null)
+            if (newUploadResult != null)
             {
                 List<Upload> uploads = new List<Upload>();
                 uploads = uploads.Concat(newUploadResult).ToList();
@@ -123,6 +130,14 @@ namespace Library
             var response = await http.GetAsync($"/api/File/Manifest");
             if (response.IsSuccessStatusCode)
             {
+                var fileStream = response.Content.ReadAsStream();
+                //StreamReader reader = new StreamReader(fileStream);
+               //JsonTextReader jsonReader = new JsonTextReader(reader);               
+                ProgramInfo myData = JsonSerializer.Deserialize<ProgramInfo>(fileStream);
+
+                //Porovnat se stávajícím uloženým souborem 
+                //Spustit aktualizaci
+
                 return true;
             }
             else
@@ -133,43 +148,47 @@ namespace Library
 
         public static async Task<bool> ManifestUploadAsync()
         {
+            string Cesta = Path.Combine(Cesty.Manifest, "Manifest.txt");
+
             ProgramInfo program = new() { Version = "0.0.1", ReleaseDate = DateTime.Now.ToString(), DownloadUrl = "192.168.1.210" };
             string Json = System.Text.Json.JsonSerializer.Serialize(program);
+            StreamWriter streamWriter = new StreamWriter(Cesta);
+            streamWriter.Write(Json);
+            streamWriter.Close();
+            streamWriter.Dispose();
 
-            // Převedení JSON řetězce na pole bytů
-            byte[] jsonBytes = Encoding.UTF8.GetBytes(Json);
+            var fileStream = System.IO.File.OpenRead(Cesta);
+            var streamContent = new StreamContent(fileStream);
+            MultipartFormDataContent content = new MultipartFormDataContent();
 
-            // Vytvoření MemoryStream z pole bytů
-            using (MemoryStream memoryStream = new MemoryStream(jsonBytes))
-            {
-                // Vytvoření instance StreamContent z MemoryStream
-                var streamContent = new StreamContent(memoryStream);
+            streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(MediaTypeNames.Application.Zip);
 
-                // Zde můžete použít 'streamContent' pro další operace s HTTP požadavkem
+            //fileNames.Add(file.Name);
+            content.Add(content: streamContent, name: "\"files\"", fileName: Path.GetFileName(Cesta));
 
-            
-                MultipartFormDataContent content = new MultipartFormDataContent();
+            var http = new HttpApi();
+            var response = await http.PostAsync("/api/File/Manifest", content);
+            //zpětné načtení souboru který byl uložen
+            //var newUploadResult = await response.Content.ReadFromJsonAsync<List<Upload>>();
+            //if (newUploadResult is not null)
+            //{
+            //    List<Upload> uploads = new List<Upload>();
+            //    uploads = uploads.Concat(newUploadResult).ToList();
+            //    return uploads.First().StoredFileName;
+            //}
+            return true;
 
-                //typ spoboru txt
-                //streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(MediaTypeNames.Text.Plain);
-
-                //fileNames.Add(file.Name);
-                content.Add(content: streamContent, name: "\"files\"", fileName: "Manifest.txt");
-
-                // Zobrazit obsah, který bude odeslán v HTTP požadavku
-                string requestBody = await content.ReadAsStringAsync();
-
-                var http = new HttpApi();
-                var response = await http.PostAsync($"/api/File/Manifest", content);
-                if (response.IsSuccessStatusCode)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
+            //var http = new HttpApi();
+            //    var response = await http.PostAsync($"/api/File/Manifest", content);
+            //    if (response.IsSuccessStatusCode)
+            //    {
+            //        return true;
+            //    }
+            //    else
+            //    {
+            //        return false;
+              //  }
+           // }
             
         }
 
@@ -215,6 +234,7 @@ namespace Library
                 BaseAddress = new Uri("http://192.168.1.210/");
             else 
                 BaseAddress = new Uri("http://10.55.1.100/");
+                //BaseAddress = new Uri("https://localhost:7208/");
         }
     }
 }
