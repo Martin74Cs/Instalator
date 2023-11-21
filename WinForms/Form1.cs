@@ -29,7 +29,7 @@ namespace WinForms
 
         private async void button2_Click(object sender, EventArgs e)
         {
-            //var qwe = await Install.ManifestUploadAsync();
+            var qwe = await Install.ManifestUploadAsync();
             var result = await Install.ManifestDownloadAsync();
         }
 
