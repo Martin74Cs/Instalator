@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Formats.Asn1;
 using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -124,7 +125,7 @@ namespace Library
             }
         }
 
-        public static async Task<bool> ManifestDownloadAsync()
+        public static async Task<ProgramInfo> ManifestDownloadAsync()
         {
             var http = new HttpApi();
             var response = await http.GetAsync($"/api/File/Manifest");
@@ -134,40 +135,67 @@ namespace Library
                 //StreamReader reader = new StreamReader(fileStream);
                //JsonTextReader jsonReader = new JsonTextReader(reader);               
                 ProgramInfo myData = JsonSerializer.Deserialize<ProgramInfo>(fileStream);
-
+                return myData;
                 //Porovnat se stávajícím uloženým souborem 
                 //Spustit aktualizaci
+            }
+            return null;
 
-                return true;
-            }
-            else
-            {
-                return false;
-            }
         }
 
-        public static async Task<bool> ManifestUploadAsync()
+        public static async Task<bool> ManifestUploadAsync(string Verze)
         {
+            //var fileStream = System.IO.File.OpenRead(file);
+            //var streamContent = new StreamContent(fileStream);
+            //MultipartFormDataContent content = new MultipartFormDataContent();
+
+            //streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(MediaTypeNames.Application.Zip);
+
+            ////fileNames.Add(file.Name);
+            //content.Add(content: streamContent, name: "\"files\"", fileName: Path.GetFileName(file));
+
+            //var http = new HttpApi();
+            //var response = await http.PostAsync("/api/File", content);
+
             string Cesta = Path.Combine(Cesty.Manifest, "Manifest.txt");
 
-            ProgramInfo program = new() { Version = "0.0.1", ReleaseDate = DateTime.Now.ToString(), DownloadUrl = "192.168.1.210" };
+            //ProgramInfo program = new() { Version = Verze, ReleaseDate = DateTime.Now.ToString(), DownloadUrl = "192.168.1.210" };
+            ProgramInfo program = new() { Version = Verze, ReleaseDate = DateTime.Now, DownloadUrl = HttpApi.IP() };
             string Json = System.Text.Json.JsonSerializer.Serialize(program);
-            StreamWriter streamWriter = new StreamWriter(Cesta);
-            streamWriter.Write(Json);
-            streamWriter.Close();
-            streamWriter.Dispose();
 
-            var fileStream = System.IO.File.OpenRead(Cesta);
-            var streamContent = new StreamContent(fileStream);
+            byte[] jsonBytes = Encoding.UTF8.GetBytes(Json);
+            var memoryStream = new MemoryStream(jsonBytes);
+
+            //StreamWriter streamWriter = new StreamWriter(Cesta);
+            //streamWriter.Write(Json);
+            //streamWriter.Close();
+            //streamWriter.Dispose();
+
+            //var fileStream = System.IO.File.OpenRead(Cesta);
+            var streamContent = new StreamContent(memoryStream);
             MultipartFormDataContent content = new MultipartFormDataContent();
 
-            streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(MediaTypeNames.Application.Zip);
+            streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(MediaTypeNames.Text.Plain);
 
             //fileNames.Add(file.Name);
             content.Add(content: streamContent, name: "\"files\"", fileName: Path.GetFileName(Cesta));
 
             var http = new HttpApi();
             var response = await http.PostAsync("/api/File/Manifest", content);
+            var newUploadResult = await response.Content.ReadAsStringAsync();
+            if (newUploadResult != null)
+            {
+                return true;
+            }
+            return false;
+            //if (response.IsSuccessStatusCode)
+            //{
+            //    return true;
+            //}
+            //else
+            //{
+            //    return false;
+            //}
             //zpětné načtení souboru který byl uložen
             //var newUploadResult = await response.Content.ReadFromJsonAsync<List<Upload>>();
             //if (newUploadResult is not null)
@@ -176,7 +204,7 @@ namespace Library
             //    uploads = uploads.Concat(newUploadResult).ToList();
             //    return uploads.First().StoredFileName;
             //}
-            return true;
+            //return true;
 
             //var http = new HttpApi();
             //    var response = await http.PostAsync($"/api/File/Manifest", content);
@@ -187,9 +215,9 @@ namespace Library
             //    else
             //    {
             //        return false;
-              //  }
-           // }
-            
+            //  }
+            // }
+
         }
 
 
@@ -219,22 +247,32 @@ namespace Library
         public string ContentType { get; set; } = string.Empty;
     }
 
-    class ProgramInfo
+    public class ProgramInfo
     {
         public string Version { get; set; } = string.Empty;
-        public string ReleaseDate { get; set; } = string.Empty;
-        public string DownloadUrl { get; set; } = string.Empty;
+        public DateTime ReleaseDate { get; set; } //= string.Empty;
+        public Uri DownloadUrl { get; set; } //= string.Empty;
     }
 
     public class HttpApi : HttpClient
     {
         public HttpApi()
         {
-            if(Environment.MachineName.ToUpperInvariant() == "KANCELAR")
-                BaseAddress = new Uri("http://192.168.1.210/");
-            else 
-                BaseAddress = new Uri("http://10.55.1.100/");
-                //BaseAddress = new Uri("https://localhost:7208/");
+            BaseAddress = IP();
+            //if(Environment.MachineName.ToUpperInvariant() == "KANCELAR")
+            //    BaseAddress = new Uri("http://192.168.1.210/");
+            //else 
+            //    BaseAddress = new Uri("http://10.55.1.100/");
+            //    //BaseAddress = new Uri("https://localhost:7208/");
+        }
+
+        public static Uri IP()
+        {
+            if (Environment.MachineName.ToUpperInvariant() == "KANCELAR")
+                return new Uri("http://192.168.1.210/");
+            else
+                return new Uri("http://10.55.1.100/");
+            //BaseAddress = new Uri("https://localhost:7208/");
         }
     }
 }

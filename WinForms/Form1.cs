@@ -23,16 +23,21 @@ namespace WinForms
                 Directory.CreateDirectory(Cesta);
 
             await Install.Download(RandomFilename, Cesta);
-            
+
             Close();
         }
 
         private async void button2_Click(object sender, EventArgs e)
         {
-            var qwe = await Install.ManifestUploadAsync();
+            var qwe = await Install.ManifestUploadAsync(TManifest.Text);
             var result = await Install.ManifestDownloadAsync();
+            label1.Text = result.Version;
         }
 
-
+        private async void Form1_Load(object sender, EventArgs e)
+        {
+            var result = await Install.ManifestDownloadAsync();
+            label1.Text = result.Version;
+        }
     }
 }
