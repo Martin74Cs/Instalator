@@ -1,9 +1,16 @@
+using Instalator;
 using Library;
+using System.Reflection.Metadata.Ecma335;
+using System.Runtime.InteropServices;
+using System.Windows.Forms.Design;
 
 namespace WinForms
 {
     public partial class Form1 : Form
     {
+        /// <summary>Cesta pro intalace </summary>
+        public string Instalace { get; set; } = string.Empty;
+
         public Form1()
         {
             InitializeComponent();
@@ -36,8 +43,36 @@ namespace WinForms
 
         private async void Form1_Load(object sender, EventArgs e)
         {
+            if (!string.IsNullOrEmpty(Instalace))
+                textBox1.Text = Instalace;
             var result = await Install.ManifestDownloadAsync();
-            label1.Text = result.Version;
+            if (result != null)
+                label1.Text = result.Version;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            var folder = new FolderBrowserDialog()
+            {
+                //UseDescriptionForTitle = true,
+                InitialDirectory = textBox1.Text,
+            };
+            if (folder.ShowDialog() == DialogResult.OK)
+                textBox1.Text = folder.SelectedPath;
+
+            //OpenFileDialog dialog = new()
+            //{
+            //    Title = "Vyper databázi Dbf",
+            //    InitialDirectory = @"G:\env",
+            //    Filter = "DB Files|*.dbf",
+            //    FileName = "Tezak.dbf"
+            //};
+
+            //if (dialog.ShowDialog() == DialogResult.OK)
+            //{
+            //    textBox1.Text = dialog.FileName;
+            //}
+            //return dialog.FileName;
         }
     }
 }

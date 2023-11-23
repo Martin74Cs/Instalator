@@ -19,9 +19,9 @@ string SoubourCode = await Install.Upload(Cesty.ZIP);
 Console.WriteLine("Ok");
 //Console.ReadKey();
 
-Console.Write("Stažení souboru z WEB .....");
-await Install.Download(SoubourCode,Cesty.UnZip);
-Console.WriteLine("Ok");
+//Console.Write("Stažení souboru z WEB .....");
+//await Install.Download(SoubourCode,Cesty.UnZip);
+//Console.WriteLine("Ok");
 
 Console.WriteLine("Stiskni klavesu .......");
 Console.ReadKey();
