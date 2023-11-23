@@ -3,14 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34205.153
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Instalator", "Instalator\Instalator.csproj", "{09AD6BC2-F495-4BF2-A9D1-E0169CA24145}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Instalator", "Instalator\Instalator.csproj", "{09AD6BC2-F495-4BF2-A9D1-E0169CA24145}"
 	ProjectSection(ProjectDependencies) = postProject
 		{77B25BB2-2E0A-4C87-8941-197CC9DD9CE4} = {77B25BB2-2E0A-4C87-8941-197CC9DD9CE4}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library", "Library\Library.csproj", "{77B25BB2-2E0A-4C87-8941-197CC9DD9CE4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library", "Library\Library.csproj", "{77B25BB2-2E0A-4C87-8941-197CC9DD9CE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinForms", "WinForms\WinForms.csproj", "{4FAF2ECC-B1B6-4CAA-9F4C-6B544C866E92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinForms", "WinForms\WinForms.csproj", "{4FAF2ECC-B1B6-4CAA-9F4C-6B544C866E92}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{8B3B5A08-21DC-4906-AF75-7B3CF915670D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +32,8 @@ Global
 		{4FAF2ECC-B1B6-4CAA-9F4C-6B544C866E92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FAF2ECC-B1B6-4CAA-9F4C-6B544C866E92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FAF2ECC-B1B6-4CAA-9F4C-6B544C866E92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B3B5A08-21DC-4906-AF75-7B3CF915670D}.Debug|Any CPU.ActiveCfg = Debug
+		{8B3B5A08-21DC-4906-AF75-7B3CF915670D}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,5 +1,6 @@
 ﻿namespace WinForms
 {
+    /// <summary>ČÁST HLADVNÍHO FORMULÁŘE </summary>
     partial class Form1
     {
         /// <summary>

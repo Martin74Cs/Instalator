@@ -61,7 +61,7 @@ namespace Library
         {
             var fileStream = System.IO.File.OpenRead(file);
             var streamContent = new StreamContent(fileStream);
-            MultipartFormDataContent content = new MultipartFormDataContent();
+            var content = new MultipartFormDataContent();
 
             streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(MediaTypeNames.Application.Zip);
 
@@ -74,8 +74,9 @@ namespace Library
             var newUploadResult = await response.Content.ReadFromJsonAsync<List<Upload>>();
             if (newUploadResult != null)
             {
-                List<Upload> uploads = new List<Upload>();
-                uploads = uploads.Concat(newUploadResult).ToList();
+                var uploads = new List<Upload>();
+                //uploads = uploads.Concat(newUploadResult).ToList();
+                uploads = [.. uploads, .. newUploadResult];
                 return uploads.First().StoredFileName;
             }
             return null;
@@ -87,7 +88,7 @@ namespace Library
             var http = new HttpApi();
             var response = await http.GetFromJsonAsync<List<Upload>>($"/api/File/Search/{FileName}");
             if (response == null)
-                return new();
+                return [];
             return response;
         }
 
@@ -100,7 +101,7 @@ namespace Library
             var response = await http.GetAsync($"/api/File/{StoredFileName}");
             if (response.IsSuccessStatusCode)
             {
-                var fileStream = response.Content.ReadAsStream();
+                //var fileStream = response.Content.ReadAsStream();
 
                 string zipFilePath = Path.Combine(Path.GetTempPath(), "temp.zip");
 
@@ -173,7 +174,7 @@ namespace Library
 
             //var fileStream = System.IO.File.OpenRead(Cesta);
             var streamContent = new StreamContent(memoryStream);
-            MultipartFormDataContent content = new MultipartFormDataContent();
+            var content = new MultipartFormDataContent();
 
             streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(MediaTypeNames.Text.Plain);
 
@@ -251,7 +252,7 @@ namespace Library
     {
         public string Version { get; set; } = string.Empty;
         public DateTime ReleaseDate { get; set; } //= string.Empty;
-        public Uri DownloadUrl { get; set; } //= string.Empty;
+        public Uri? DownloadUrl { get; set; } //= new Uri(""); //= string.Empty;
     }
 
     public class HttpApi : HttpClient
@@ -268,7 +269,7 @@ namespace Library
 
         public static Uri IP()
         {
-            if (Environment.MachineName.ToUpperInvariant() == "KANCELAR")
+            if (Environment.MachineName.Equals("KANCELAR", StringComparison.InvariantCultureIgnoreCase))
                 return new Uri("http://192.168.1.210/");
             else
                 return new Uri("http://10.55.1.100/");

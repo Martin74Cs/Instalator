@@ -1,7 +1,10 @@
 using Instalator;
 using Library;
+using System;
+using System.IO;
 using System.Reflection.Metadata.Ecma335;
 using System.Runtime.InteropServices;
+using System.Security.AccessControl;
 using System.Windows.Forms.Design;
 
 namespace WinForms
@@ -11,6 +14,7 @@ namespace WinForms
         /// <summary>Cesta pro intalace </summary>
         public string Instalace { get; set; } = string.Empty;
 
+        /// <summary>HLAVNÍ FORMULÁØ </summary>
         public Form1()
         {
             InitializeComponent();
@@ -21,11 +25,28 @@ namespace WinForms
             var zip = await Install.GetSearchAsync("zip.zip");
             string RandomFilename = zip.Last().StoredFileName ?? "";
 
-            string Cesta = string.Empty;
-            if (Environment.MachineName.ToUpperInvariant() == "KANCELAR")
-                Cesta = @"c:\Users\Martin\OneDriveKopie\Instalator\Instalator\Instalator\bin\Debug\net8.0\ZIP\";
-            Cesta = @"d:\OneDrive.ZALOHA\Instalator\Instalator\bin\Debug\net8.0\FullInstall";
-            string Kontrola = Path.GetDirectoryName(Cesta);
+            string Cesta = textBox1.Text;
+            //if (Environment.MachineName.ToUpperInvariant() == "KANCELAR")
+            //Cesta = @"c:\Users\Martin\OneDriveKopie\Instalator\Instalator\Instalator\bin\Debug\net8.0\ZIP\";
+            //Cesta = @"d:\OneDrive.ZALOHA\Instalator\Instalator\bin\Debug\net8.0\FullInstall";
+            //string Kontrola = Path.GetDirectoryName(Cesta);
+
+            // Získání aktuálních pøístupových práv pomocí DirectoryInfo
+            DirectoryInfo directoryInfo = new DirectoryInfo(Cesty.Spusteno);
+            DirectorySecurity directorySecurity = directoryInfo.GetAccessControl();
+
+            // Nastavení nových pøístupových práv (napøíklad READWRITE pro všechny uživatele)
+            //directorySecurity.AddAccessRule(new FileSystemAccessRule("Everyone", FileSystemRights.FullControl, InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, PropagationFlags.None, AccessControlType.Allow));
+
+            // Nastavení nových pøístupových práv (napøíklad READWRITE pro všechny uživatele)
+            //directorySecurity.AddAccessRule(new FileSystemAccessRule("Administrators", FileSystemRights.FullControl, InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, PropagationFlags.None, AccessControlType.Allow));
+
+            FileSystemAccessRule rule = new FileSystemAccessRule("Users", FileSystemRights.FullControl, InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, PropagationFlags.None, AccessControlType.Allow);
+            directorySecurity.AddAccessRule(rule);
+
+            // Aplikace nových pøístupových práv
+            directoryInfo.SetAccessControl(directorySecurity);
+
             if (!Directory.Exists(Cesta))
                 Directory.CreateDirectory(Cesta);
 
@@ -43,8 +64,7 @@ namespace WinForms
 
         private async void Form1_Load(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(Instalace))
-                textBox1.Text = Instalace;
+            textBox1.Text = Cesty.Tezak;
             var result = await Install.ManifestDownloadAsync();
             if (result != null)
                 label1.Text = result.Version;

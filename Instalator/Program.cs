@@ -5,26 +5,49 @@ using Library;
 Console.WriteLine(Environment.MachineName.ToUpperInvariant());
 
 //Příprava instalce
-Console.Write("Příprava instalce .....");
-//Příprava souboru kopirování do složky Install
-Zip.KopirovatSlozku(Cesty.Zdroj, Cesty.Instal);
-Console.WriteLine("Ok");
+Console.WriteLine("Příprava INSTALAČNÍHO SOUBORU .....(ANO/NE)");
+if (Console.ReadKey().Key == ConsoleKey.A)
+{ 
+    Console.WriteLine("Poslat soubor na WEB .....");
+    string Soubor = await Install.Upload(Cesty.Instalator);
+    if(string.IsNullOrEmpty(Soubor))
+        Console.WriteLine("Chyba nahrání souboru");
+    else
+    Console.WriteLine($"Byl nahran soubor : {Soubor}");
+    //return;
+}
 
-Console.Write("Zip .....");
-Zip.Start(Cesty.Instal, Cesty.ZIP);
-Console.WriteLine("Ok");
+Console.Write("Příprava instalce .....(ANO/NE)");
+if (Console.ReadKey().Key == ConsoleKey.A)
+{ 
+    //Příprava instalce
+    Console.WriteLine("Příprava instalce .....");
+    //Příprava souboru kopirování do složky Install
+    Zip.KopirovatSlozku(Cesty.Zdroj, Cesty.Instal);
+    Console.WriteLine("Ok");
 
-Console.Write("Poslat soubor na WEB .....");
-string SoubourCode = await Install.Upload(Cesty.ZIP);
-Console.WriteLine("Ok");
-//Console.ReadKey();
+    Console.Write("Zip .....");
+    Zip.Start(Cesty.Instal, Cesty.ZIP);
+    Console.WriteLine("Ok");
 
-//Console.Write("Stažení souboru z WEB .....");
-//await Install.Download(SoubourCode,Cesty.UnZip);
-//Console.WriteLine("Ok");
+    Console.WriteLine("Poslat soubor na WEB .....");
+    string SoubourCode = await Install.Upload(Cesty.ZIP);
+    if (string.IsNullOrEmpty(SoubourCode))
+        Console.WriteLine("Chyba nahrání souboru");
+    else
+        Console.WriteLine($"Byl nahran soubor : {SoubourCode}");
 
-Console.WriteLine("Stiskni klavesu .......");
-Console.ReadKey();
+    //Console.ReadKey();
+
+    Console.Write("Stažení souboru z WEB .....");
+    if (await Install.Download(SoubourCode, Cesty.UnZip))
+        Console.WriteLine($"Byl nahran soubor : {SoubourCode}");
+    else
+        Console.WriteLine("Chyba stahování");
+
+    Console.WriteLine("Stiskni klavesu .......");
+    Console.ReadKey();
+}
 
 ////Manifest.Vypis();
 ////Console.Write("\n\n");
