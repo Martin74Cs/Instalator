@@ -12,8 +12,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library", "Library\Library.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinForms", "WinForms\WinForms.csproj", "{4FAF2ECC-B1B6-4CAA-9F4C-6B544C866E92}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{8B3B5A08-21DC-4906-AF75-7B3CF915670D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,8 +30,6 @@ Global
 		{4FAF2ECC-B1B6-4CAA-9F4C-6B544C866E92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FAF2ECC-B1B6-4CAA-9F4C-6B544C866E92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FAF2ECC-B1B6-4CAA-9F4C-6B544C866E92}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8B3B5A08-21DC-4906-AF75-7B3CF915670D}.Debug|Any CPU.ActiveCfg = Debug
-		{8B3B5A08-21DC-4906-AF75-7B3CF915670D}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
